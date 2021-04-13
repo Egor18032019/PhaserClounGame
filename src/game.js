@@ -20,6 +20,7 @@
      physics: {
          default: "arcade",
          arcade: {
+             debug: true,
             enableSleeping: true,
              gravity: {
                  y: 0

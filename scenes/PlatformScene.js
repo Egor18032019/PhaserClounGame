@@ -57,17 +57,10 @@
    }
 
    collectStar(player, star) {
-     if(player.body.velocity.x!==0){
+     if (player.body.velocity.x !== 0) {
        star.body.setVelocityX(player.body.velocity.x);
-     }
-     else {
+     } else {
        star.body.setVelocityY(player.body.velocity.y);
-     }
-     star.setFriction(1);
-     if (player.body.velocity.x > 0) {
-       //  star.x = +80;
-     } else if (player.body.velocity.y > 0) {
-       //  star.y = +80;
      }
    }
 
@@ -84,17 +77,28 @@
      return stars;
    }
 
-   stop() {
-     this.body.setVelocityX(0);
-     this.body.setVelocityY(0);
+   stop(star, player) {
+     if (player.body.velocity.x !== 0) {
+       if (player.body.velocity.x < 0) {
+         star.body.setVelocityX(-0.001);
+       } else {
+         star.body.setVelocityX(0.001);
+       }
+     } else {
+       if (player.body.velocity.y < 0) {
+         star.body.setVelocityY(-0.001);
+       } else {
+         star.body.setVelocityY(0.001);
+       }
+     }
    }
 
-   setStop(star) {
-     this.time.addEvent({
-       delay: 200,
-       callback: this.stop,
-       callbackScope: star
-     });
+   destroy(first, second) {
+     first.destroy()
+   }
+   setStop(first, second) {
+     first.setImmovable(true)
+     second.setImmovable(true)
    }
    create() {
      this.map = this.make.tilemap({
@@ -105,35 +109,63 @@
      this.tiles = this.map.addTilesetImage('bloks', null, 32, 32, 1, 2);
 
      this.layer = this.map.createLayer(0, this.tiles, 0, 0).setPipeline('Light2D')
-     this.player = this.physics.add.sprite(332, 276, `player`, 6);
+     this.player = this.physics.add.sprite(400, 266, `player`, 6)
+     this.danger = this.physics.add.image(611, 244, `red`)
      // this.stars = this.createStars()
-     this.star2 = this.physics.add.image(202, 100, `star`)
-     this.star3 = this.physics.add.image(202, 144, `star`)
-     this.star1 = this.physics.add.image(202, 243, `star`)
-     const bomb = this.physics.add.sprite(50, 242, "bomb");
+     this.star6 = this.physics.add.image(266, 145, `star`)
+     this.star5 = this.physics.add.image(240, 111, `star`)
+     this.star4 = this.physics.add.image(175, 88, `star`)
+     this.star3 = this.physics.add.image(175, 140, `star`)
+     this.star2 = this.physics.add.image(175, 241, `star`)
+     this.star1 = this.physics.add.image(85, 241, `star`)
+     this.star1.setCollideWorldBounds(true);
+
      //  // Далее ограничим игрока границами карты. Сначала мы устанавливаем границы мира, а затем устанавливаем
      this.physics.world.bounds.width = this.map.widthInPixels;
      this.physics.world.bounds.height = this.map.heightInPixels;
-     this.player.setCollideWorldBounds(true);
-     bomb.setCollideWorldBounds(true);
-
+     this.player.setInteractive().setCollideWorldBounds();
      //делает все тайлы в слое obstacles  доступными для обнаружения столкновений (отправляет 0 если -1 то проникает с внешней стороны)
      this.map.setCollisionByExclusion([0]);
 
-     //  // запрещаем проходить сквозь камни
+     //  // запрещаем проходить сквозь 
      this.physics.add.collider(this.player, this.layer);
      this.physics.add.collider(this.star1, this.layer);
-     this.physics.add.collider(this.star1, this.tiles);
-     this.physics.add.collider(this.star1, this.player, this.setStop, null, this);
-     this.physics.add.collider(this.star2, this.player, this.setStop, null, this);
-     this.physics.add.collider(this.star3, this.player, this.setStop, null, this);
      this.physics.add.collider(this.star2, this.layer);
      this.physics.add.collider(this.star3, this.layer);
-     this.physics.add.collider(bomb, this.layer);
-     //  this.physics.add.overlap(this.player, this.star1, this.collectStar, null, this);
-     this.physics.add.overlap(this.player, this.star2, this.collectStar, null, this);
-     this.physics.add.overlap(this.player, this.star3, this.collectStar, null, this);
-     this.physics.add.overlap(this.player, bomb, this.collectStar, null, this);
+     this.physics.add.collider(this.star4, this.layer);
+     this.physics.add.collider(this.star5, this.layer);
+     this.physics.add.collider(this.star6, this.layer);
+     this.physics.add.collider(this.star1, this.tiles);
+     
+     this.physics.add.collider(this.star1, this.player, this.stop, null, this);
+     this.physics.add.collider(this.star2, this.player, this.stop, null, this);
+     this.physics.add.collider(this.star3, this.player, this.stop, null, this);
+     this.physics.add.collider(this.star4, this.player, this.stop, null, this);
+     this.physics.add.collider(this.star5, this.player, this.stop, null, this);
+     this.physics.add.collider(this.star6, this.player, this.stop, null, this);
+
+     this.physics.add.collider(this.star1, this.danger, this.destroy, null, this);
+     this.physics.add.collider(this.star2, this.danger, this.destroy, null, this);
+     this.physics.add.collider(this.star3, this.danger, this.destroy, null, this);
+     this.physics.add.collider(this.star4, this.danger, this.destroy, null, this);
+     this.physics.add.collider(this.star5, this.danger, this.destroy, null, this);
+     this.physics.add.collider(this.star6, this.danger, this.destroy, null, this);
+
+     this.physics.add.overlap(this.star1, this.star2, this.setStop, null, this);
+     this.physics.add.overlap(this.star1, this.star3, this.setStop, null, this);
+     this.physics.add.overlap(this.star1, this.star4, this.setStop, null, this);
+     this.physics.add.overlap(this.star1, this.star5, this.setStop, null, this);
+     this.physics.add.overlap(this.star1, this.star6, this.setStop, null, this);
+     this.physics.add.overlap(this.star2, this.star3, this.setStop, null, this);
+     this.physics.add.overlap(this.star2, this.star4, this.setStop, null, this);
+     this.physics.add.overlap(this.star2, this.star5, this.setStop, null, this);
+     this.physics.add.overlap(this.star2, this.star6, this.setStop, null, this);
+     this.physics.add.overlap(this.star3, this.star4, this.setStop, null, this);
+     this.physics.add.overlap(this.star3, this.star5, this.setStop, null, this);
+     this.physics.add.overlap(this.star3, this.star6, this.setStop, null, this);
+     this.physics.add.overlap(this.star4, this.star5, this.setStop, null, this);
+     this.physics.add.overlap(this.star4, this.star6, this.setStop, null, this);
+     this.physics.add.overlap(this.star5, this.star6, this.setStop, null, this);
 
      this.cursors = this.input.keyboard.createCursorKeys();
 
