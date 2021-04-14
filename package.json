@@ -1,0 +1,32 @@
+{
+  "name": "phasercloungame",
+  "version": "1.0.0",
+  "description": "Игра на Phaise + MonogoDB + Express и остальная мелочь",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.3",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Egor18032019/PhaserClounGame.git"
+  },
+  "author": "Егор Пришедько",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Egor18032019/PhaserClounGame/issues"
+  },
+  "homepage": "https://github.com/Egor18032019/PhaserClounGame#readme"
+}

@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/game.html');
 });
 app.get('/login', function (req, res) {
-  res.sendFile(__dirname + '/game.html');
+  res.sendFile(__dirname + '/login.html');
 });
 
 
@@ -45,7 +45,7 @@ app.use('/', secureRoutes);
 // Отлавливаем все остальные маршруты
 app.use("/",
   (req, res, next) => {
-    console.log(req.body, "app.js stroke 71")
+    console.log(req.body, "app.js stroke 48")
     res.status(404);
     res.json({
       message: '404 - Not Found(совсем нет)'

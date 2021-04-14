@@ -1,5 +1,6 @@
 const express = require('express');
-
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const tokenList = {};
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.get('/status', (req, res, next) => {
 
 router.post('/signup', (req, res) => {
   res.status(200).json({
+    status: 'ok signup',
     message: 'signup',
     user: req.user,
     status: res
@@ -24,7 +26,9 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+  console.log(req)
   res.status(200).json({
+    status: 'ok login',
     message: 'login',
     user: req.user,
     status: res
