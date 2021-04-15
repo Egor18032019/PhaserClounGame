@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Login for Game</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.min.js"></script>
- </head>
+    <script type="module" src="src/utils/user.js"></script>
+
+</head>
 
 <body>
     <h1>Да начнется игра</h1>
@@ -17,7 +19,8 @@
             <span id="UsName">
                 ??
             </span></p>
-        <span>logout</span>
+        <p><a href="/scores">Рейтинг</a></p>
+        <p>logout</p>
     </div>
     <div class="game"></div>
     <script type="module" src="src/game.js"></script>

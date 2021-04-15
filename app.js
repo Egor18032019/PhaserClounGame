@@ -5,7 +5,10 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
- /**
+const mongoose = require('mongoose');
+const passport = require('passport');
+
+/**
  * './routes/main.js'
  */
 const routes = require('./routes/main');
@@ -13,7 +16,31 @@ const routes = require('./routes/main');
  * './routes/secure.js'
  */
 const secureRoutes = require('./routes/secure');
+// установка mongo-соединения
 
+const uri = process.env.MONGO_CONNECTION_URL; // переменнас среда из .env
+// вызываем новое соединение и передаем два аргумента(подключение и параметры подключения)
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+});
+/* 
+    useNewUrlParser - флаг, который указывает использовать новый URL, т.к. старый парсер уже сильно устарел. По умолчанию этот флаг установлен в false.
+    useCreateIndex- флаг использования сборки индекса createIndex(), а не устаревший драйвер MongoDB ensureIndex(). По умолчанию этот флаг установлен в false.
+    useUnifiedTopology - флаг использования нового механизма топологии. По умолчанию этот флаг установлен в false.
+*/
+// обработка ошибок
+mongoose.connection.on('error', (error) => {
+  // показывем
+  console.log(error);
+  // выходим
+  process.exit(1);
+});
+
+mongoose.connection.on('connected', function () {
+  console.log('connected to mongo');
+});
 
 // Создаем экземпляр приложения express
 const app = express();
@@ -25,8 +52,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json()); // разбираем application/json
 
 app.use(cookieParser());
+const auth = require('./routes/auth/auth')
 
- app.use(express.static(__dirname + '')); //?? убрать?
+app.use(express.static(__dirname + '')); //?? убрать?
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/game.html');
 });
@@ -38,14 +66,16 @@ app.get('/login', function (req, res) {
 //сначало он смотрит в первом есть ли это потом во втором и дальше
 // Главный маршрут
 app.use('/', routes);
-// // другие маршруты
-app.use('/', secureRoutes);
- 
+// другие маршруты
+// app.use('/', secureRoutes);
+app.use('/', passport.authenticate('jwt', {
+  session: false
+}), secureRoutes);
 
 // Отлавливаем все остальные маршруты
 app.use("/",
   (req, res, next) => {
-    console.log(req.body, "app.js stroke 48")
+    console.log(req.body, "app.js stroke 78")
     res.status(404);
     res.json({
       message: '404 - Not Found(совсем нет)'

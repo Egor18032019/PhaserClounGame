@@ -9,12 +9,12 @@ main {
     justify-content: center;
 }
 
-.table__scores {
+.rating {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
 }
 
-.score__table {
+#score__table {
     list-style: decimal;
 }

@@ -1,6 +1,7 @@
 import ScoreLabel from './ui/ScoreLabel.js';
 import StepsLabel from './ui/StepsLabel.js';
 import CargoLabel from './ui/CargoLabel.js';
+import onSetupFormSubmit from '../src/utils/submit_score.js';
 
 
 export default class PlatformScene extends Phaser.Scene {
@@ -20,7 +21,6 @@ export default class PlatformScene extends Phaser.Scene {
   }
 
   makeAnimePlayer() {
-
     this.anims.create({
       key: `left`,
       frames: this.anims.generateFrameNumbers(`player`, {
@@ -132,6 +132,10 @@ export default class PlatformScene extends Phaser.Scene {
   destroy(first, second) {
     this.scoreLabel.add(10);
     first.destroy()
+    const data = this.scoreLabel.getScore()
+    if(data>=60){
+      onSetupFormSubmit(data)
+    }
   }
   setStop(first, second) {
     first.setImmovable(true)

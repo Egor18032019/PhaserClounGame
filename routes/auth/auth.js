@@ -6,7 +6,7 @@ const JWTstrategy = require('passport-jwt').Strategy;
 //Стратегия passport-jwt позволяет нам аутентифицироваться с помощью веб-токена JSON.
 
 
-const UserModel = require('../models/userModel');
+const UserModel = require('../models/userModel.js');
 
 // обработка регистрации пользователя
 passport.use('signup', new localStrategy({
@@ -45,12 +45,12 @@ passport.use('login',
 
         },
         async (email, password, done) => {
+            console.log(email, "auth.js stroke 48")
             try {
                 // мы использовали метод findOne модели UserModel для запроса в базе данных
                 const user = await UserModel.findOne({
                     email
                 });
-                console.log(user)
 
                 if (!user) {
                     return done(null, false, {
@@ -59,9 +59,12 @@ passport.use('login',
                 }
 
                 const validate = await user.isValidPassword(password);
-
+                console.log(validate)
+                
                 if (!validate) {
+                    console.log("validate")
                     return done(null, false, {
+                        status: 'Wrong Password(неправильный пароль)',
                         message: 'Wrong Password'
                     });
 
@@ -72,6 +75,7 @@ passport.use('login',
                 });
 
             } catch (error) {
+                console.log("error")
 
                 return done(error);
 
