@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/favicon.ico" />
     <link rel="stylesheet" href="css/style.css">
-    <title>Login for Game</title>
+    <title>Cloun Game</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.min.js"></script>
     <script type="module" src="src/utils/user.js"></script>
+    <link rel="manifest" href="./assets/manifest.json" />
 
 </head>
 
@@ -22,7 +24,72 @@
         <p><a href="/scores">Рейтинг</a></p>
         <p>logout</p>
     </div>
-    <div class="game"></div>
+    <!-- Модальное окно -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+
+            <p>Добавить на домашний экран?</p>
+
+            <button onclick="offlinePrompt()">Установить</button>
+        </div>
+    </div>
+    <div id="game"></div>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async function () {
+
+                await navigator.serviceWorker.register('/sw.js', {
+                    scope: '/' //устанавливаем область видимости (scope) для нашего Service Worker в корень сайта: /
+                }).then(function (registration) {
+                    console.log(
+                        'ServiceWorker зарегистрирован с областью видимости в пределах: ',
+                        registration.scope);
+                }, function (err) {
+                    console.log('Регистрация ServiceWorker не удалась: ', err);
+                });
+            });
+        }
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', function (e) {
+            console.alert('beforeinstallprompt запущен');
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log(deferredPrompt)
+            modal.style.display = 'block';
+        });
+        // Получаем модальное окно
+        const modal = document.getElementById('myModal');
+        // Получаем элемент <span> закрывающее модальное окно
+        const span = modal.getElementsByClassName('close')[0];
+        // Если пользователь щелкает за пределами модального окна - оно закрывается
+        window.onclick = function (event) {
+            if (event.target !== modal) {
+                modal.style.display = 'none';
+            }
+        }
+        // Если пользователь щелкает <span> (x), модальное окно закрывается
+        span.onclick = function () {
+            modal.style.display = 'none';
+        }
+
+        function offlinePrompt() {
+            console.log('serviceWorker' in navigator)
+            console.log(deferredPrompt)
+            deferredPrompt.prompt()
+            deferredPrompt.userChoice
+                .then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the A2HS prompt');
+                    } else {
+                        console.log('User dismissed the A2HS prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            //Когда нажата кнопка установки в модальном окне, мы вызываем метод prompt() для этого события.
+        }
+    </script>
     <script type="module" src="src/game.js"></script>
 </body>
 

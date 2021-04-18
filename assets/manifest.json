@@ -1,0 +1,26 @@
+{
+  "name": "Phaser and Express",
+  "short_name": "P$R",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "382x381"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "../game.html",
+  "display": "standalone",
+  "theme_color": "#bd21f3",
+  "background_color": "#21ccf3",
+  "orientation": "landscape"
+}

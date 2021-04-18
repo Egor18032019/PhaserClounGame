@@ -75,7 +75,6 @@
 
      // здесь происходит загрузка ресурсов
      this.load.image('bloks', './assets/drawtiles1.png');
-    //  this.load.tilemapTiledJSON(`map`, `./assets/map/map.json`);
      this.load.image(`tiles`, `./assets/map/spritesheet.png`);
 
      this.load.tilemapCSV('map', './assets/grid1.csv');
